@@ -4,7 +4,11 @@ import com.example.andretortolano.githubsearch.api.github.GithubService
 import com.example.andretortolano.githubsearch.api.github.responses.User
 import com.example.andretortolano.githubsearch.contracts.SearchRepositoryContract
 
-class SearchRepositoryPresenter(userView: SearchRepositoryContract.View, githubService: GithubService) : SearchRepositoryContract.Presenter {
+class SearchRepositoryPresenter(val repositoryView: SearchRepositoryContract.View, val githubService: GithubService) : SearchRepositoryContract.Presenter {
+    override fun resume() {
+
+    }
+
     override fun searchRepositories(search: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
