@@ -2,7 +2,7 @@ package com.example.andretortolano.githubsearch.api.github.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class Repository (
+data class Repository(
         @SerializedName("id") val id: Long,
         @SerializedName("name") val name: String,
         @SerializedName("full_name") val fullName: String,

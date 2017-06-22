@@ -13,34 +13,33 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
-import rx.Scheduler
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 class GithubService {
 
-    fun getUser(username: String) : Observable<User> {
+    fun getUser(username: String): Observable<User> {
         return getInstance().getUser(username)
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun searchUsers(search: String) : Observable<UserResult> {
+    fun searchUsers(search: String): Observable<UserResult> {
         return getInstance().searchUser(search)
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun getRepository(owner: String, repos: String) : Observable<Repository> {
+    fun getRepository(owner: String, repos: String): Observable<Repository> {
         return getInstance().getRepository(owner, repos)
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun searchRepos(search: String) : Observable<RepositoryResult> {
+    fun searchRepos(search: String): Observable<RepositoryResult> {
         return getInstance().searchRepository(search)
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
@@ -48,17 +47,17 @@ class GithubService {
     }
 
     companion object {
-        private var sInstance : GithubServiceAPI? = null
+        private var sInstance: GithubServiceAPI? = null
 
         fun getInstance(): GithubServiceAPI {
-            if(sInstance == null) {
+            if (sInstance == null) {
                 val gson = GsonBuilder().setLenient().create()
                 val retrofit = Retrofit.Builder()
                         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .baseUrl("https://api.github.com/")
 
-                if(BuildConfig.DEBUG) {
+                if (BuildConfig.DEBUG) {
                     val logging = HttpLoggingInterceptor()
                     logging.level = HttpLoggingInterceptor.Level.BODY
 
