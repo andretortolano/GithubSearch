@@ -14,6 +14,9 @@ interface GithubServiceAPI {
     @GET("search/users") // https://developer.github.com/v3/search/#search-users
     fun searchUser(@Query("q") query: String, @Query("page") page: Int = 1, @Query("per_page") perPage: Int = 10): Observable<UserResult>
 
+    @GET("search/users") // https://developer.github.com/v3/search/#search-users
+    fun searchUserSorted(@Query("q") query: String,  @Query("sort") sort: String,  @Query("order") order: String, @Query("page") page: Int = 1, @Query("per_page") perPage: Int = 10): Observable<UserResult>
+
     @GET("users/{username}") // https://developer.github.com/v3/users/#get-a-single-user
     fun getUser(@Path("username") username: String): Observable<User>
 

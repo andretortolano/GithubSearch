@@ -25,6 +25,13 @@ class GithubService {
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun getPopularUsers(): Observable<UserResult> {
+        return getInstance().searchUserSorted("type:user", "followers", "desc")
+            .doOnError { error -> Log.e("Error", error.message) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun searchUsers(search: String): Observable<UserResult> {
         return getInstance().searchUser(search)
                 .doOnError { error -> Log.e("Error", error.message) }

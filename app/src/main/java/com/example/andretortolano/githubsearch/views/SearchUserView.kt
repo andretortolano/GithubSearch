@@ -1,27 +1,39 @@
 package com.example.andretortolano.githubsearch.views
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.andretortolano.githubsearch.R
+import com.example.andretortolano.githubsearch.api.github.GithubService
 import com.example.andretortolano.githubsearch.api.github.responses.User
+import com.example.andretortolano.githubsearch.components.UserRecyclerAdapter
 import com.example.andretortolano.githubsearch.contracts.SearchUserContract
+import com.example.andretortolano.githubsearch.presenters.SearchUserPresenter
+import kotlinx.android.synthetic.main.fragment_search_user.*
 
 class SearchUserView : Fragment(), SearchUserContract.View {
-    override fun showUsers(users: List<User>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun setPresenter(presenter: SearchUserContract.Presenter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    private lateinit var mPresenter: SearchUserContract.Presenter
+
+    private lateinit var mAdapter: UserRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mPresenter = SearchUserPresenter(this, GithubService())
+
+        mAdapter = UserRecyclerAdapter(ArrayList<User>())
+
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recycler_view.layoutManager = LinearLayoutManager(context)
+        recycler_view.adapter = mAdapter
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -32,24 +44,12 @@ class SearchUserView : Fragment(), SearchUserContract.View {
 
     override fun onResume() {
         super.onResume()
-        Log.i("TAGFrag", "onResume")
+        mPresenter.resume()
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-    }
-
-    companion object {
-        fun getFragTag(): String {
-            return SearchUserView::class.java.toString()
-        }
-
-        fun newInstance(): SearchUserView {
-            return SearchUserView()
-        }
+    override fun showUsers(users: List<User>) {
+        mAdapter.userList.clear()
+        mAdapter.userList.addAll(users)
+        mAdapter.notifyDataSetChanged()
     }
 }
