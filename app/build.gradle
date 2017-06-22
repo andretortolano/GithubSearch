@@ -49,4 +49,5 @@ dependencies {
 
     // Logging-interceptor
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    implementation 'com.android.support:support-v4:25.4.0'
 }
