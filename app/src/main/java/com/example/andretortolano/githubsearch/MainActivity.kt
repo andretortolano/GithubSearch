@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
+import com.example.andretortolano.githubsearch.debug.Logger
 import com.example.andretortolano.githubsearch.views.SearchRepositoryView
 import com.example.andretortolano.githubsearch.views.SearchUserView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,17 +24,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         replaceFragment(SearchUserView::class.java)
         nav_view.setCheckedItem(R.id.nav_user)
-
-        // TODO remove
-        // val service: GithubService = GithubService()
-        // service.getUser("andretortolano").subscribe { user -> Log.i("APPTAG", "user: ${user.id}, ${user.avatarUrl}") }
     }
 
     override fun onBackPressed() {
@@ -41,8 +44,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
+            } else {
+                super.onBackPressed()
             }
-            super.onBackPressed()
         }
     }
 
@@ -65,6 +69,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+        return super.onCreateOptionsMenu(menu);
+    }
+
     fun replaceFragment(fragmentClass: Class<*>) {
         var fragment: Fragment? = null
         try {
@@ -72,11 +81,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
         val oldFragment = supportFragmentManager.findFragmentByTag(fragmentClass.simpleName)
-        if (oldFragment != null && !oldFragment.isDetached) {
+        if (oldFragment != null && oldFragment.isVisible) {
             return
         }
 
-        supportFragmentManager.beginTransaction().replace(R.id.content_frame, fragment, fragmentClass.simpleName).commit()
+        toolbar.title = fragmentClass.simpleName
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment, fragmentClass.simpleName)
+                .commit()
     }
 }

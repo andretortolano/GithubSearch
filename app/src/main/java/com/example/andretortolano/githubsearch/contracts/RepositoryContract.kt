@@ -3,21 +3,18 @@ package com.example.andretortolano.githubsearch.contracts
 import com.example.andretortolano.githubsearch.BasePresenter
 import com.example.andretortolano.githubsearch.BaseView
 import com.example.andretortolano.githubsearch.api.github.responses.Repository
+import com.example.andretortolano.githubsearch.api.github.responses.User
 
-interface SearchRepositoryContract {
+interface RepositoryContract {
     interface View : BaseView<Presenter> {
         fun showProgress()
 
         fun hideProgress()
 
-        fun showRepositories(repos: List<Repository>)
-
-        fun openRepositoryDetails(repository: Repository)
+        fun showRepository(repository: Repository)
     }
 
     interface Presenter : BasePresenter {
-        fun searchRepositories(search: String?)
-
-        fun onCloseActionSearch()
+        fun getRepository(owner: String, name: String)
     }
 }

@@ -3,7 +3,13 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="github_api_poc">Github API POC</string>
+    <string name="owner_email">andretortolano@hotmail.com</string>
+    <string name="menu_icon_content_description">Menu Icon</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_view_search_hint">Search users…</string>
+    <string name="repository_view_search_hint">Search repositories…</string>
+    <string name="action_search">Action Search</string>
+    <string name="name">Name</string>
+    <string name="owner">Owner</string>
 </resources>

@@ -18,36 +18,31 @@ import rx.schedulers.Schedulers
 
 class GithubService {
 
-    fun getUser(username: String): Observable<User> {
+    fun getUser(username: String): Observable<User> { // TODO validate
         return getInstance().getUser(username)
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun getPopularUsers(): Observable<UserResult> {
-        return getInstance().searchUserSorted("type:user", "followers", "desc")
-            .doOnError { error -> Log.e("Error", error.message) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    fun searchUsers(search: String): Observable<UserResult> {
-        return getInstance().searchUser(search)
+    fun searchUsers(search: String?): Observable<UserResult> {
+        val result = if (search == null) getInstance().searchUserSorted("type:user", "followers", "desc") else getInstance().searchUser(search)
+        return result
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun getRepository(owner: String, repos: String): Observable<Repository> {
+    fun getRepository(owner: String, repos: String): Observable<Repository> { // TODO validate
         return getInstance().getRepository(owner, repos)
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun searchRepos(search: String): Observable<RepositoryResult> {
-        return getInstance().searchRepository(search)
+    fun searchRepositories(search: String?): Observable<RepositoryResult> {
+        val result = if (search == null) getInstance().searchRepositorySorted("star:>=1", "stars", "desc") else getInstance().searchRepository(search)
+        return result
                 .doOnError { error -> Log.e("Error", error.message) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

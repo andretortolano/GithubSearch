@@ -9,5 +9,7 @@ data class User(
         @SerializedName("url") val url: String,
         @SerializedName("type") val type: String,
         @SerializedName("site_admin") val siteAdmin: Boolean,
-        @SerializedName("score") val score: Int
+        @SerializedName("name") val name: String,
+        @SerializedName("location") val location: String,
+        @SerializedName("score") val score: Float
 )
