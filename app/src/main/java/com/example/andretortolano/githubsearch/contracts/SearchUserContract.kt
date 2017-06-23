@@ -6,12 +6,18 @@ import com.example.andretortolano.githubsearch.api.github.responses.User
 
 interface SearchUserContract {
     interface View : BaseView<Presenter> {
+        fun showProgress()
+
+        fun hideProgress()
+
         fun showUsers(users: List<User>)
+
+        fun openUserDetails(user: User)
     }
 
     interface Presenter : BasePresenter {
-        fun searchUsers(search: String)
+        fun searchUsers(search: String?)
 
-        fun openUserDetails(user: User)
+        fun onCloseActionSearch()
     }
 }
