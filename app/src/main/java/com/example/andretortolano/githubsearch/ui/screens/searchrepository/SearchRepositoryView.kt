@@ -1,38 +1,34 @@
-package com.example.andretortolano.githubsearch.views
+package com.example.andretortolano.githubsearch.ui.screens.searchrepository
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import com.example.andretortolano.githubsearch.R
 import com.example.andretortolano.githubsearch.api.github.GithubService
 import com.example.andretortolano.githubsearch.api.github.responses.Repository
-import com.example.andretortolano.githubsearch.components.CustomRecyclerViewListener
-import com.example.andretortolano.githubsearch.components.RepositoryRecyclerAdapter
-import com.example.andretortolano.githubsearch.contracts.SearchRepositoryContract
-import com.example.andretortolano.githubsearch.debug.Logger
-import com.example.andretortolano.githubsearch.presenters.SearchRepositoryPresenter
-import kotlinx.android.synthetic.main.fragment_search_user.*
+import com.example.andretortolano.githubsearch.ui.components.CustomRecyclerViewListener
+import com.example.andretortolano.githubsearch.ui.components.RepositoryRecyclerAdapter
+import com.example.andretortolano.githubsearch.ui.screens.BaseFragment
+import com.example.andretortolano.githubsearch.ui.screens.showrepository.ShowRepositoryView
+import kotlinx.android.synthetic.main.fragment_search_repository.*
 
-class SearchRepositoryView : Fragment(), SearchRepositoryContract.View {
+class SearchRepositoryView : BaseFragment<SearchRepositoryContract.Presenter>(), SearchRepositoryContract.View {
 
-    private lateinit var mPresenter: SearchRepositoryContract.Presenter
+    override lateinit var mPresenter: SearchRepositoryContract.Presenter
 
-    private lateinit var mAdapter: RepositoryRecyclerAdapter
+    private var mAdapter: RepositoryRecyclerAdapter = RepositoryRecyclerAdapter(ArrayList<Repository>(), object : CustomRecyclerViewListener<Repository> {
+        override fun onItemSelect(item: Repository) {
+            openRepositoryDetails(item)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
 
         mPresenter = SearchRepositoryPresenter(this, GithubService())
-
-        mAdapter = RepositoryRecyclerAdapter(ArrayList<Repository>(), object : CustomRecyclerViewListener<Repository> {
-            override fun onItemSelect(item: Repository) {
-                openRepositoryDetails(item)
-            }
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
@@ -42,7 +38,6 @@ class SearchRepositoryView : Fragment(), SearchRepositoryContract.View {
         super.onViewCreated(view, savedInstanceState)
         recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = mAdapter
-        mPresenter.start()
     }
 
     override fun showRepositories(repos: List<Repository>) {
@@ -64,7 +59,7 @@ class SearchRepositoryView : Fragment(), SearchRepositoryContract.View {
         val searchView = MenuItemCompat.getActionView(searchActionItem) as SearchView
         searchView.queryHint = getString(R.string.repository_view_search_hint)
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?) = false
 
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -86,10 +81,10 @@ class SearchRepositoryView : Fragment(), SearchRepositoryContract.View {
     }
 
     override fun openRepositoryDetails(repository: Repository) {
-        val frag: RepositoryView = RepositoryView.newInstance(repository.owner.login, repository.name)
+        val frag: ShowRepositoryView = ShowRepositoryView.newInstance(repository.owner.login, repository.name)
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, frag)
-                .addToBackStack("INFO_VIEW")
+                .addToBackStack(BACK_STACK_NAME)
                 .commit()
     }
 }

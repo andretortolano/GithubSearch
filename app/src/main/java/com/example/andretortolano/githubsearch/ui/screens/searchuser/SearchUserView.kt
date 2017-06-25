@@ -1,7 +1,6 @@
-package com.example.andretortolano.githubsearch.views
+package com.example.andretortolano.githubsearch.ui.screens.searchuser
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -9,29 +8,27 @@ import android.view.*
 import com.example.andretortolano.githubsearch.R
 import com.example.andretortolano.githubsearch.api.github.GithubService
 import com.example.andretortolano.githubsearch.api.github.responses.User
-import com.example.andretortolano.githubsearch.components.CustomRecyclerViewListener
-import com.example.andretortolano.githubsearch.components.UserRecyclerAdapter
-import com.example.andretortolano.githubsearch.contracts.SearchUserContract
-import com.example.andretortolano.githubsearch.presenters.SearchUserPresenter
+import com.example.andretortolano.githubsearch.ui.components.CustomRecyclerViewListener
+import com.example.andretortolano.githubsearch.ui.components.UserRecyclerAdapter
+import com.example.andretortolano.githubsearch.ui.screens.BaseFragment
+import com.example.andretortolano.githubsearch.ui.screens.showuser.ShowUserView
 import kotlinx.android.synthetic.main.fragment_search_user.*
 
 
-class SearchUserView : Fragment(), SearchUserContract.View {
-    private lateinit var mPresenter: SearchUserContract.Presenter
+class SearchUserView : BaseFragment<SearchUserContract.Presenter>(), SearchUserContract.View {
 
-    private lateinit var mAdapter: UserRecyclerAdapter
+    override lateinit var mPresenter: SearchUserContract.Presenter
+
+    private val mAdapter: UserRecyclerAdapter = UserRecyclerAdapter(ArrayList<User>(), object : CustomRecyclerViewListener<User> {
+        override fun onItemSelect(item: User) {
+            openUserDetails(item)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
 
         mPresenter = SearchUserPresenter(this, GithubService())
-
-        mAdapter = UserRecyclerAdapter(ArrayList<User>(), object : CustomRecyclerViewListener<User> {
-            override fun onItemSelect(item: User) {
-                openUserDetails(item)
-            }
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
@@ -41,7 +38,6 @@ class SearchUserView : Fragment(), SearchUserContract.View {
         super.onViewCreated(view, savedInstanceState)
         recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = mAdapter
-        mPresenter.start()
     }
 
     override fun showUsers(users: List<User>) {
@@ -59,10 +55,10 @@ class SearchUserView : Fragment(), SearchUserContract.View {
     }
 
     override fun openUserDetails(user: User) {
-        val frag: UserView = UserView.newInstance(user.login)
+        val frag: ShowUserView = ShowUserView.newInstance(user.login)
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, frag)
-                .addToBackStack("INFO_VIEW")
+                .addToBackStack(BACK_STACK_NAME)
                 .commit()
     }
 
@@ -71,7 +67,7 @@ class SearchUserView : Fragment(), SearchUserContract.View {
         val searchView = MenuItemCompat.getActionView(searchActionItem) as SearchView
         searchView.queryHint = getString(R.string.user_view_search_hint)
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?) = false
 
             override fun onQueryTextSubmit(query: String?): Boolean {

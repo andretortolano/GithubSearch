@@ -1,16 +1,21 @@
-package com.example.andretortolano.githubsearch.presenters
+package com.example.andretortolano.githubsearch.ui.screens.searchrepository
 
 import com.example.andretortolano.githubsearch.api.github.GithubService
-import com.example.andretortolano.githubsearch.api.github.responses.Repository
-import com.example.andretortolano.githubsearch.contracts.SearchRepositoryContract
-import com.example.andretortolano.githubsearch.debug.Logger
+import io.reactivex.disposables.CompositeDisposable
+import retrofit2.HttpException
 
 class SearchRepositoryPresenter(val repositoryView: SearchRepositoryContract.View, val githubService: GithubService) : SearchRepositoryContract.Presenter {
+
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     var mCurrentSearch: String? = null;
 
     override fun start() {
         searchRepositories(null)
+    }
+
+    override fun stop() {
+        compositeDisposable.clear()
     }
 
     override fun onCloseActionSearch() {
@@ -21,13 +26,16 @@ class SearchRepositoryPresenter(val repositoryView: SearchRepositoryContract.Vie
 
     override fun searchRepositories(search: String?) {
         repositoryView.showProgress()
-        githubService.searchRepositories(search)
-                .subscribe { reposResult ->
-                    run {
+        val disposable = githubService.searchRepositories(search)
+                .subscribe { reposResult, error ->
+                    if(reposResult != null) {
                         mCurrentSearch = search
                         repositoryView.showRepositories(reposResult.items)
-                        repositoryView.hideProgress()
+                    } else if (error is HttpException) {
+                        repositoryView.showErrorMessage(error.message())
                     }
+                    repositoryView.hideProgress()
                 }
+        compositeDisposable.add(disposable)
     }
 }

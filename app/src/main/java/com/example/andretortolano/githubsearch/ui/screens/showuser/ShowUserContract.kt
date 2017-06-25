@@ -1,10 +1,10 @@
-package com.example.andretortolano.githubsearch.contracts
+package com.example.andretortolano.githubsearch.ui.screens.showuser
 
-import com.example.andretortolano.githubsearch.BasePresenter
-import com.example.andretortolano.githubsearch.BaseView
 import com.example.andretortolano.githubsearch.api.github.responses.User
+import com.example.andretortolano.githubsearch.ui.screens.BasePresenter
+import com.example.andretortolano.githubsearch.ui.screens.BaseView
 
-interface UserContract {
+interface ShowUserContract {
     interface View : BaseView<Presenter> {
         fun showProgress()
 
@@ -14,6 +14,6 @@ interface UserContract {
     }
 
     interface Presenter : BasePresenter {
-        fun getUser(login: String)
+
     }
 }
