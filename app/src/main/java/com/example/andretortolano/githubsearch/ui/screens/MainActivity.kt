@@ -1,4 +1,4 @@
-package com.example.andretortolano.githubsearch
+package com.example.andretortolano.githubsearch.ui.screens
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -8,9 +8,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.example.andretortolano.githubsearch.debug.Logger
-import com.example.andretortolano.githubsearch.views.SearchRepositoryView
-import com.example.andretortolano.githubsearch.views.SearchUserView
+import com.example.andretortolano.githubsearch.R
+import com.example.andretortolano.githubsearch.ui.screens.searchrepository.SearchRepositoryView
+import com.example.andretortolano.githubsearch.ui.screens.searchuser.SearchUserView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 

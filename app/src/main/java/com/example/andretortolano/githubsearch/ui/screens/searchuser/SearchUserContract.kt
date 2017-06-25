@@ -1,8 +1,8 @@
-package com.example.andretortolano.githubsearch.contracts
+package com.example.andretortolano.githubsearch.ui.screens.searchuser
 
-import com.example.andretortolano.githubsearch.BasePresenter
-import com.example.andretortolano.githubsearch.BaseView
 import com.example.andretortolano.githubsearch.api.github.responses.User
+import com.example.andretortolano.githubsearch.ui.screens.BasePresenter
+import com.example.andretortolano.githubsearch.ui.screens.BaseView
 
 interface SearchUserContract {
     interface View : BaseView<Presenter> {

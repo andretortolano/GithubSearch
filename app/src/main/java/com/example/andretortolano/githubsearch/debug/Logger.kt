@@ -9,5 +9,9 @@ class Logger {
         fun i(message: String?) {
             Log.i(APPLICATION_TAG, message);
         }
+
+        fun e(message: String?) {
+            Log.e(APPLICATION_TAG, message);
+        }
     }
 }

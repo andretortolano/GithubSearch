@@ -1,38 +1,31 @@
-package com.example.andretortolano.githubsearch.views
+package com.example.andretortolano.githubsearch.ui.screens.showuser
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.example.andretortolano.githubsearch.R
 import com.example.andretortolano.githubsearch.api.github.GithubService
 import com.example.andretortolano.githubsearch.api.github.responses.User
-import com.example.andretortolano.githubsearch.contracts.UserContract
-import com.example.andretortolano.githubsearch.presenters.UserPresenter
+import com.example.andretortolano.githubsearch.ui.screens.BaseFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
 
-class UserView : Fragment(), UserContract.View {
+class ShowUserView : BaseFragment<ShowUserContract.Presenter>(), ShowUserContract.View {
 
-    private lateinit var mPresenter: UserContract.Presenter
-
-    private lateinit var mLogin: String
+    override lateinit var mPresenter: ShowUserContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mPresenter = UserPresenter(this, GithubService())
-        mLogin = arguments.getString(USER_LOGIN)
+        mPresenter = ShowUserPresenter(this, GithubService(), arguments.getString(USER_LOGIN))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater!!.inflate(R.layout.fragment_user, container, false)!!
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mPresenter.getUser(mLogin)
-    }
 
     override fun showProgress() {
         progress_view.visibility = View.VISIBLE
@@ -40,6 +33,10 @@ class UserView : Fragment(), UserContract.View {
 
     override fun hideProgress() {
         progress_view.visibility = View.GONE
+    }
+
+    override fun showErrorMessage(message: String) {
+        showToast(message)
     }
 
     override fun showUser(user: User) {
@@ -53,8 +50,8 @@ class UserView : Fragment(), UserContract.View {
     companion object {
         var USER_LOGIN = "BUNDLE_USER_LOGIN"
 
-        fun newInstance(login: String): UserView {
-            val fragment: UserView = UserView()
+        fun newInstance(login: String): ShowUserView {
+            val fragment: ShowUserView = ShowUserView()
 
             val args: Bundle = Bundle()
             args.putString(USER_LOGIN, login)

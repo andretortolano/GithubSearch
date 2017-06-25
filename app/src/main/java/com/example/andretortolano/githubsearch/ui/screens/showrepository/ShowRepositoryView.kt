@@ -1,41 +1,31 @@
-package com.example.andretortolano.githubsearch.views
+package com.example.andretortolano.githubsearch.ui.screens.showrepository
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.example.andretortolano.githubsearch.R
 import com.example.andretortolano.githubsearch.api.github.GithubService
 import com.example.andretortolano.githubsearch.api.github.responses.Repository
-import com.example.andretortolano.githubsearch.contracts.RepositoryContract
-import com.example.andretortolano.githubsearch.presenters.RepositoryPresenter
+import com.example.andretortolano.githubsearch.ui.screens.BaseFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_repository.*
 
-class RepositoryView : Fragment(), RepositoryContract.View {
+class ShowRepositoryView : BaseFragment<ShowRepositoryContract.Presenter>(), ShowRepositoryContract.View {
 
-    private lateinit var mPresenter: RepositoryContract.Presenter
-
-    private lateinit var mOwner: String
-
-    private lateinit var mName: String
+    override lateinit var mPresenter: ShowRepositoryContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mPresenter = RepositoryPresenter(this, GithubService())
-        mOwner = arguments.getString(OWNER)
-        mName = arguments.getString(NAME)
+        mPresenter = ShowRepositoryPresenter(this, GithubService(), arguments.getString(OWNER), arguments.getString(REPOSITORY_NAME))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater!!.inflate(R.layout.fragment_repository, container, false)!!
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mPresenter.getRepository(mOwner, mName)
-    }
 
     override fun showProgress() {
         progress_view.visibility = View.VISIBLE
@@ -57,14 +47,14 @@ class RepositoryView : Fragment(), RepositoryContract.View {
     companion object {
         var OWNER = "BUNDLE_OWNER"
 
-        var NAME = "BUNDLE_NAME"
+        var REPOSITORY_NAME = "BUNDLE_REPOSITORY_NAME"
 
-        fun newInstance(owner: String, name: String): RepositoryView {
-            val fragment: RepositoryView = RepositoryView()
+        fun newInstance(owner: String, name: String): ShowRepositoryView {
+            val fragment: ShowRepositoryView = ShowRepositoryView()
 
             val args: Bundle = Bundle()
             args.putString(OWNER, owner)
-            args.putString(NAME, name)
+            args.putString(REPOSITORY_NAME, name)
             fragment.arguments = args
             return fragment
         }
