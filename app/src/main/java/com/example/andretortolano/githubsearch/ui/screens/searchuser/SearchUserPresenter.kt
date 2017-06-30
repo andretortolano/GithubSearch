@@ -1,13 +1,11 @@
 package com.example.andretortolano.githubsearch.ui.screens.searchuser
 
 import com.example.andretortolano.githubsearch.api.github.GithubService
-import com.example.andretortolano.githubsearch.api.github.responses.UserResult
-import com.example.andretortolano.githubsearch.debug.Logger
 import io.reactivex.disposables.CompositeDisposable
 import retrofit2.HttpException
+import javax.inject.Inject
 
-
-class SearchUserPresenter(val userView: SearchUserContract.View, val githubService: GithubService) : SearchUserContract.Presenter {
+class SearchUserPresenter @Inject constructor(val userView: SearchUserContract.View, val githubService: GithubService) : SearchUserContract.Presenter {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 

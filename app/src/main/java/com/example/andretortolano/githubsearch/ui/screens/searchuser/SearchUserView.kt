@@ -13,11 +13,14 @@ import com.example.andretortolano.githubsearch.ui.components.UserRecyclerAdapter
 import com.example.andretortolano.githubsearch.ui.screens.BaseFragment
 import com.example.andretortolano.githubsearch.ui.screens.showuser.ShowUserView
 import kotlinx.android.synthetic.main.fragment_search_user.*
+import javax.inject.Inject
 
 
 class SearchUserView : BaseFragment<SearchUserContract.Presenter>(), SearchUserContract.View {
 
     override lateinit var mPresenter: SearchUserContract.Presenter
+
+    @Inject lateinit var mPresentertest: SearchUserPresenter
 
     private val mAdapter: UserRecyclerAdapter = UserRecyclerAdapter(ArrayList<User>(), object : CustomRecyclerViewListener<User> {
         override fun onItemSelect(item: User) {
@@ -27,8 +30,9 @@ class SearchUserView : BaseFragment<SearchUserContract.Presenter>(), SearchUserC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // INJECT
 
-        mPresenter = SearchUserPresenter(this, GithubService())
+        //mPresenter = SearchUserPresenter(this, GithubService())
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
